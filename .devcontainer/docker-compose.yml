@@ -1,91 +1,36 @@
-version: "3.8"
+{
+  "name": "saude_ondemand",
 
-services:
-  # ==========================
-  # APP (Python)
-  # ==========================
-  app:
-    build:
-      context: ..
-      dockerfile: .devcontainer/Dockerfile
-    container_name: saude_ondemand_app
+  "dockerComposeFile": [
+    "../docker-compose.yml"
+  ],
 
-    # Monta o projeto dentro do container
-    volumes:
-      - ..:/workspace:cached
+  "service": "app",
+  "workspaceFolder": "/workspaces/saude_ondemand",
 
-    # Variáveis de ambiente importantes
-    environment:
-      MINIO_ENDPOINT: "minio:9000"
-      MINIO_ACCESS_KEY: "minioadmin"
-      MINIO_SECRET_KEY: "minioadmin"
-      MINIO_SECURE: "false"
-      MINIO_RAW_BUCKET: "raw"
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "version": "latest"
+    }
+  },
 
-    # Mantém o container vivo no Codespaces
-    command: sleep infinity
+  "forwardPorts": [
+    9000,
+    9001
+  ],
 
-    depends_on:
-      - db
-      - minio
+  "postCreateCommand": "docker-compose up -d --build",
 
-    networks:
-      - saude_network
-
-  # ==========================
-  # POSTGRES (Opcional)
-  # ==========================
-  db:
-    image: postgres:15
-    container_name: saude_ondemand_db
-
-    environment:
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: mypassword
-      POSTGRES_DB: mydb
-
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-
-    ports:
-      - "5432:5432"
-
-    networks:
-      - saude_network
-
-  # ==========================
-  # MINIO (S3 LOCAL)
-  # ==========================
-  minio:
-    image: minio/minio:latest
-    container_name: saude_ondemand_minio
-
-    environment:
-      MINIO_ROOT_USER: minioadmin
-      MINIO_ROOT_PASSWORD: minioadmin
-
-    command: server /data --console-address ":9001"
-
-    volumes:
-      - minio-data:/data
-
-    ports:
-      - "9000:9000" # API S3
-      - "9001:9001" # Console Web
-
-    networks:
-      - saude_network
-
-# ==========================
-# VOLUMES
-# ==========================
-volumes:
-  postgres-data:
-  minio-data:
-
-# ==========================
-# NETWORK
-# ==========================
-networks:
-  saude_network:
-    driver: bridge
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash"
+      },
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-azuretools.vscode-docker"
+      ]
+    }
+  }
+}

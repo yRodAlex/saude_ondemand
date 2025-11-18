@@ -1,0 +1,37 @@
+{
+  "name": "saude_ondemand",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspaces/saude_ondemand",
+
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "version": "latest"
+    }
+  },
+
+  "runServices": [
+    "minio",
+    "app"
+  ],
+
+  "forwardPorts": [
+    9000,
+    9001
+  ],
+
+  "postCreateCommand": "docker-compose up -d --build",
+
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash"
+      },
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-azuretools.vscode-docker"
+      ]
+    }
+  }
+}

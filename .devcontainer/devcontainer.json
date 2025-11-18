@@ -1,19 +1,18 @@
 {
   "name": "saude_ondemand",
-  "dockerComposeFile": "../docker-compose.yml",
+
+  "dockerComposeFile": [
+    "../docker-compose.yml"
+  ],
+
   "service": "app",
-  "workspaceFolder": "/workspaces/saude_ondemand",
+  "workspaceFolder": "/workspace",
 
   "features": {
     "ghcr.io/devcontainers/features/docker-in-docker:2": {
       "version": "latest"
     }
   },
-
-  "runServices": [
-    "minio",
-    "app"
-  ],
 
   "forwardPorts": [
     9000,
